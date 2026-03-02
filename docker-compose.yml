@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  frontend:
+    build: ./frontend/analyzeTextAI
+    ports:
+      - "3000:80"   # host:contenedor
+    depends_on:
+      - backend
+
+  backend:
+    build: ./backend
+    ports:
+      - "9100:9100"
+    env_file:
+      - .env

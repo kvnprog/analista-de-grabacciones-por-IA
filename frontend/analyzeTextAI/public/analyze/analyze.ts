@@ -60,7 +60,7 @@ clearWords() {
   formData.append('words', this.words.join(','));
 
   this.http.post(
-    'http://localhost:9100/analyze-text',
+    'http://172.18.232.195:9100/analyze-text',
     formData,
     { responseType: 'blob' }
   ).subscribe({

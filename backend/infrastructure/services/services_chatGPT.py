@@ -2,12 +2,49 @@
 from infrastructure.core.config import client
 from fastapi import UploadFile
 
-def audio_to_text(file: UploadFile):
-    # asegurar puntero
-    file.file.seek(0)
+import subprocess
+import uuid
+import os
 
+def audio_to_text(file: UploadFile):
+    file.file.seek(0)
+    audio_bytes = file.file.read()
+
+    print("Nombre:", file.filename)
+    print("Tipo:", file.content_type)
+    print("Size:", len(audio_bytes))
+
+    if len(audio_bytes) == 0:
+        raise Exception("Archivo vacío")
+
+    # nombres únicos
+    input_path = f"/tmp/{uuid.uuid4()}"
+    output_path = f"{input_path}.wav"
+
+    # guardar archivo original
+    with open(input_path, "wb") as f:
+        f.write(audio_bytes)
+
+    # convertir a WAV
+    subprocess.run([
+        "ffmpeg", "-y",
+        "-i", input_path,
+        "-ar", "16000",      # sample rate recomendado
+        "-ac", "1",          # mono
+        output_path
+    ], check=True)
+
+    # leer WAV convertido
+    with open(output_path, "rb") as f:
+        converted_audio = f.read()
+
+    # limpiar archivos temporales
+    os.remove(input_path)
+    os.remove(output_path)
+
+    # enviar a OpenAI
     transcription = client.audio.transcriptions.create(
-        file=(file.filename, file.file, file.content_type),
+        file=("audio.wav", converted_audio, "audio/wav"),
         model="gpt-4o-transcribe"
     )
 

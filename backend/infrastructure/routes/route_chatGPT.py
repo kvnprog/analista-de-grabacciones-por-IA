@@ -1,25 +1,11 @@
 # routes/route_chatGPT.py
 from fastapi import APIRouter, UploadFile, File, Form
 from fastapi.responses import FileResponse
-from infrastructure.services.services_chatGPT import audio_to_text, analyze_text_with_chatgpt
+from infrastructure.services.services_chatGPT import analyze_text_with_chatgpt
+from infrastructure.services.service_deebSeek import audio_to_text,analyze_text_with_deepseek
 from infrastructure.services.services_excel import create_analysis_excel
 import json
 from typing import List
-
-
-router = APIRouter(
-    prefix="/chaGPTServices",
-    tags=["chaGPTServices"]
-)
-
-@router.post("/audio-to-text")
-async def convert_audio(file: UploadFile = File(...)):
-    text = audio_to_text(file)  # 👈 PASAMOS file.file
-    return {
-        "success": True,
-        "text": text
-    }
-
 
 router = APIRouter()
 
@@ -32,6 +18,8 @@ async def analyze_multiple_audios(
     files: múltiples audios
     words: "hola,api,chatgpt"
     """
+    
+    print("Entrox2")
 
     # 1️⃣ Convertir palabras a lista
     words_to_find = [w.strip() for w in words.split(",") if w.strip()]
@@ -50,11 +38,10 @@ async def analyze_multiple_audios(
     full_text = "\n".join(transcriptions)
 
     # 4️⃣ Analizar texto completo
-    analysis_raw = analyze_text_with_chatgpt(full_text, words_to_find)
-    analysis = json.loads(analysis_raw)
+    analysis_raw = analyze_text_with_deepseek(full_text, words_to_find)
 
-    # 5️⃣ Crear Excel
-    excel_path = create_analysis_excel(analysis)
+    # 5️⃣ Crear Excelx
+    excel_path = create_analysis_excel(analysis_raw)
 
     return FileResponse(
         excel_path,

@@ -1,0 +1,29 @@
+.fade-in-right {
+  animation: fadeInRight 0.3s ease-out forwards;
+}
+
+.fade-out-right {
+  animation: fadeOutRight 0.2s ease-in forwards;
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeOutRight {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}

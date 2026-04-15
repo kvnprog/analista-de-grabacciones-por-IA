@@ -8,7 +8,7 @@ from infrastructure.routes.route_chatGPT import router as chatGPT
 app = FastAPI()
 
 origins = [
-    "http://localhost:3000"
+    "http://172.18.232.195:3000"
 ]
 
 # 🔥 CORS (VA AQUÍ)

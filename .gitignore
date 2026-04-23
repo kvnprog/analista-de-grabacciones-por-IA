@@ -30,3 +30,10 @@ Thumbs.db
 
 # Coverage
 coverage/
+
+# .ENV
+.env
+*.env
+
+# Ignore Postgres volume
+infra/local

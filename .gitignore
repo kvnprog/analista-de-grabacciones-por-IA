@@ -34,3 +34,6 @@ coverage/
 # .ENV
 .env
 *.env
+
+# Ignore Postgres volume
+infra/local

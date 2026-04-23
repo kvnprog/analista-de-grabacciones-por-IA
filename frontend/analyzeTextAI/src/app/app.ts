@@ -5,6 +5,7 @@ import { AlertContainerComponent } from './shared/alerts-container/alert-contain
 
 @Component({
   selector: 'app-root',
+  standalone: true,
   imports: [RouterOutlet, AlertContainerComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'

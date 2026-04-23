@@ -9,10 +9,35 @@ services:
       - backend
 
   backend:
-    build: ./backend
+    build:
+      context: .  # La raíz del proyecto
+      dockerfile: ./backend/Dockerfile
+    container_name: grabaciones-backend
     environment:
-      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=/app/backend:/app/shared
+    volumes:
+      - .:/app  # Mapeamos todo el proyecto a /app
     ports:
       - "9100:9100"
-    env_file:
-      - .env
+  
+  postgres:
+        image: postgres:14
+        container_name: postgres-analyst
+        restart: always
+
+        environment:
+        - POSTGRES_USER=${DB_USER}
+        - POSTGRES_PASSWORD=${DB_PASS}
+        - POSTGRES_DB=${DB_NAME}
+
+        volumes:
+        - ./infra/local/postgres_data:/var/lib/postgresql/data
+        
+        ports:
+        - "5432:5432"
+
+        healthcheck:
+          test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"] # Executes this command to check if the database is ready
+          interval: 4s
+          timeout: 3s
+          retries: 4

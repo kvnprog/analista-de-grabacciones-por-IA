@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -6,6 +6,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { ChangeDetectorRef } from '@angular/core';
 import { finalize } from 'rxjs/operators';
 import { AlertService } from '../../src/app/services/alert.service';
+import { TitleService } from '../../src/app/services/title-service.service';
+import { environment } from '../../src/environment';
 
 interface AudioFile {
   file: File;
@@ -22,7 +24,7 @@ interface AudioFile {
   templateUrl: './analyze.html',
   styleUrls: ['./analyze.css']
 })
-export class Analyze {
+export class Analyze implements OnInit {
   constructor(
     private http: HttpClient,
     private cdr: ChangeDetectorRef,
@@ -37,6 +39,11 @@ export class Analyze {
   opcionA: boolean = false;
   opcionB: boolean = false;
   textoBusqueda: string = '';
+  private titleService = inject(TitleService);
+
+  ngOnInit() {
+    this.titleService.setTitle('Sistema de búsqueda por grabaciones mediante IA');
+  }
 
   onDragOver(event: DragEvent) {
     event.preventDefault();
@@ -111,7 +118,7 @@ export class Analyze {
     formData.append('textSearch', this.textoBusqueda || "");
 
     this.http.post(
-      'http://172.18.232.195:9100/analyze-text',
+      environment.apiUrl + "/analyze-text",
       formData,
       { responseType: 'blob' }
     ).pipe(

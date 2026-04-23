@@ -1,0 +1,93 @@
+<div class="min-h-screen flex items-center justify-center bg-slate-100 p-6">
+    <div class="max-w-4xl w-full bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col md:flex-row">
+        
+        <div class="hidden md:block md:w-1/2 relative overflow-hidden">
+            <img src="mca/bcm.png" 
+                alt="Abstract background" 
+                class="absolute inset-0 w-full h-full object-cover">
+            
+            <div class="absolute inset-0 bg-[#0c0259] opacity-90 mix-blend-multiply"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0c0259] via-transparent to-transparent opacity-60"></div>
+
+            <div class="relative z-10 h-full flex flex-col justify-center px-12 text-white">
+                <div class="mb-4">
+                    <span class="inline-block px-3 py-1 rounded-full bg-white/10 border border-white/20 text-xs tracking-widest uppercase">
+                        Sistema Corporativo
+                    </span>
+                </div>
+                <h1 class="text-4xl font-bold leading-tight">
+                    Potencia tus <br><span class="text-indigo-300">Resultados.</span>
+                </h1>
+                <div class="w-12 h-1.5 bg-white mt-6 rounded-full"></div>
+                <p class="mt-8 text-blue-100 font-light leading-relaxed">
+                    Bienvenido a la plataforma centralizada de gestión. Seguridad y eficiencia en un solo lugar.
+                </p>
+            </div>
+        </div>
+
+        <div class="w-full md:w-1/2 p-8 sm:p-12">
+            <div class="flex justify-center md:justify-start mb-10">
+                <div class="flex justify-center items-center bg-[#0c0259] p-2.5 rounded-xl shadow-lg shadow-indigo-200">
+                    <img src="mca/logo-mc-corporativo.png" alt="logo-mc-corporativo" width="85">
+                </div>
+                <span class="ml-3 text-2xl font-bold text-gray-800 self-center tracking-tight">
+                    Corporativo <span class="text-[#0c0259]">Muñoz</span>
+                </span>
+            </div>
+
+            <div class="mb-8 text-center md:text-left">
+                <h2 class="text-2xl font-bold text-gray-900">Iniciar Sesión</h2>
+                <p class="text-gray-500 mt-1">Por favor, ingresa tus datos de acceso.</p>
+            </div>
+
+            <form [formGroup]="form" (ngSubmit)="onLogin()" class="space-y-5">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Usuario</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                        </span>
+                        <input type="text" 
+                               class="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#1865ab] focus:border-transparent transition-all outline-none text-gray-600 placeholder-gray-400 bg-gray-50/50" 
+                               placeholder="Ej: admin_root"
+                               formControlName="username"
+                               required>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Contraseña</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                        </span>
+                        <input type="password" 
+                               class="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#1865ab] focus:border-transparent transition-all outline-none text-gray-600 placeholder-gray-400 bg-gray-50/50" 
+                               placeholder="••••••••"
+                               formControlName="password" 
+                               required>
+                    </div>
+                </div>
+
+                <div class="flex items-center">
+                    <input id="remember" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gra y-300 rounded cursor-pointer">
+                    <label for="remember" class="ml-2 text-sm text-gray-600 cursor-pointer select-none">Recordar usuario y contraseña</label>
+                </div>
+
+                <button type="submit" 
+                        [disabled]="!form.valid"
+                        class="w-full bg-[#1865ab] hover:bg-[#1865ab]/90 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-indigo-200 transition-all active:scale-[0.98]">
+                    Entrar al sistema
+                </button>
+            </form>
+
+            <footer class="mt-12 text-center md:text-left text-xs text-gray-400">
+                &copy; 2026 MCA Desarrollo IA. Todos los derechos reservados.
+            </footer>
+        </div>
+    </div>
+</div>

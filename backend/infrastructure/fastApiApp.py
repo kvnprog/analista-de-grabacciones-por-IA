@@ -1,5 +1,6 @@
 import os
 
+from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -9,6 +10,8 @@ from infrastructure.routes.route_chatGPT import router as chatGPT
 from infrastructure.routes.auth_routes import router as auth
 from infrastructure.routes.route_users import router as users
 
+
+load_dotenv()
 app = FastAPI()
 
 IP_WEB = os.getenv("IP_WEB")

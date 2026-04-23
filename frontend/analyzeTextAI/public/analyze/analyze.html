@@ -1,35 +1,29 @@
-  <div class="flex flex-row gap-4 items-start">
-    <div class="flex flex-col gap-4 w-1/2">
-      <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
-        <h2 class="font-semibold text-gray-700 mb-4">Subir grabaciones</h2>
-        <div class="flex items-center justify-center w-full">
-          <label for="dropzone-file"
-                 (dragover)="onDragOver($event)"
-                 (dragleave)="onDragLeave($event)"
-                 (drop)="onDrop($event)"
-                 [ngClass]="{
-                              'border-indigo-500 bg-indigo-50 border-solid': isOver,
-                              'border-gray-300 bg-gray-50 border-dashed': !isOver
-                            }"
-                 class="flex flex-col items-center justify-center w-full h-48 border-2 rounded-lg cursor-pointer hover:bg-gray-100 transition-all duration-200">
-            <div class="flex flex-col items-center justify-center pt-5 pb-6 pointer-events-none">
-              <svg [class.animate-bounce]="isOver" class="w-8 h-8 mb-3 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
-              </svg>
-              <p class="mb-2 text-sm text-gray-500 font-semibold">
-                {{ isOver ? '¡Suéltalo ya!' : 'Haz clic para subir o arrastra los archivos aquí' }}
-              </p>
-              <p class="text-xs text-gray-400 font-mono">MP3, WAV</p>
-            </div>
-
-            <input id="dropzone-file" 
-                   type="file" 
-                   class="hidden"
-                   (change)="onFileSelected($event)"
-                   multiple
-                   accept=".mp3,audio/mpeg,audio/wav,audio/x-wav"/>
-          </label>
-        </div>
+<div class="flex flex-col-reverse lg:flex-row gap-4 items-start">
+  <div class="flex flex-col gap-4 w-full lg:w-1/2">
+    <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
+      <h2 class="font-semibold text-gray-700 mb-4">Subir grabaciones</h2>
+      <div class="flex items-center justify-center w-full">
+        <label for="dropzone-file"
+               (dragover)="onDragOver($event)"
+               (dragleave)="onDragLeave($event)"
+               (drop)="onDrop($event)"
+               [ngClass]="{
+                 'border-indigo-500 bg-indigo-50 border-solid': isOver,
+                 'border-gray-300 bg-gray-50 border-dashed': !isOver
+               }"
+               class="flex flex-col items-center justify-center w-full h-48 border-2 rounded-lg cursor-pointer hover:bg-gray-100 transition-all duration-200">
+          <div class="flex flex-col items-center justify-center pt-5 pb-6 pointer-events-none">
+            <svg [class.animate-bounce]="isOver" class="w-8 h-8 mb-3 text-gray-500" fill="none" viewBox="0 0 20 16">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+            </svg>
+            <p class="mb-2 text-sm text-gray-500 font-semibold text-center">
+              {{ isOver ? '¡Suéltalo ya!' : 'Haz clic para subir o arrastra los archivos aquí' }}
+            </p>
+            <p class="text-xs text-gray-400 font-mono">MP3, WAV</p>
+          </div>
+          <input id="dropzone-file" type="file" class="hidden" (change)="onFileSelected($event)" multiple accept=".mp3,audio/mpeg,audio/wav,audio/x-wav"/>
+        </label>
+      </div>
     </div>
 
     <div *ngIf="audioList.length > 0" 
@@ -38,19 +32,15 @@
          animate.leave="fade-out">
       <div class="space-y-3">
         <h2 class="font-semibold text-gray-700 mb-4">Sonidos listos:</h2>
-        
         <div class="max-h-60 overflow-y-auto pr-2 space-y-3 custom-scrollbar">
           <div *ngFor="let item of audioList; let i = index" 
-              class="flex items-center gap-4 p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-            
-            <div class="flex-1 min-w-0">
+               class="flex flex-col sm:flex-row items-center gap-4 p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+            <div class="flex-1 min-w-0 w-full sm:w-auto text-center sm:text-left">
               <p class="text-sm font-medium text-gray-900 truncate">{{ item.name }}</p>
               <p class="text-xs text-gray-500 uppercase">{{ item.format }} • {{ item.size }}</p>
             </div>
-
-            <audio [src]="item.url" controls class="h-8 w-40"></audio>
-
-            <button (click)="removeFile(i)" class="p-2 text-gray-400 hover:text-red-500 transition-colors">
+            <audio [src]="item.url" controls class="h-8 w-full sm:w-40"></audio>
+            <button (click)="removeFile(i)" class="p-2 text-gray-400 hover:text-red-500">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
             </button>
           </div>
@@ -59,11 +49,11 @@
     </div>
   </div>
 
-  <div class="flex flex-col gap-4 w-1/2">
+  <div class="flex flex-col gap-4 w-full lg:w-1/2">
     <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
-      <h2 class="font-semibold text-gray-700 mb-4">Formas de busqueda</h2>
+      <h2 class="font-semibold text-gray-700 mb-4">Formas de búsqueda</h2>
 
-      <div class="flex flex-row gap-4 w-full mb-4">
+      <div class="flex flex-col sm:flex-row gap-4 w-full mb-4">
         <div class="flex items-center ps-4 bg-white border border-gray-200 rounded-lg shadow-sm w-1/2">
           <input id="bordered-checkbox-1"
                  [(ngModel)]="opcionA"
@@ -90,35 +80,23 @@
         </div>
       </div>
 
-      <div *ngIf="opcionA" 
-           class="mb-4"
-           animate.enter="fade-in-scale" 
-           animate.leave="fade-out">
-        <label for="cmbTagsPalabras" class="block text-sm/6 font-medium">Agregar palabras:</label>
-        <div class="flex">
-          <ng-select [items]="[]" 
-                     [addTag]="true" 
-                     [multiple]="true" 
-                     [selectOnTab]="true" 
-                     [isOpen]="false"
-                     [(ngModel)]="selectedTags"
-                     placeholder="Escribe y pulsa Enter..."
-                     id="cmbTagsPalabras"
-                     class="custom-tailwind-select block w-full rounded-l-lg focus:ring-blue-500 focus:border-blue-500 outline-none"> 
-          </ng-select>
-        </div>
+      <div *ngIf="opcionA" class="mb-4" animate.enter="fade-in-scale" animate.leave="fade-out">
+        <label for="cmbTagsPalabras" class="block text-sm font-medium mb-1">Agregar palabras:</label>
+        <ng-select [items]="[]" 
+                   [addTag]="true" 
+                   [multiple]="true" 
+                   [selectOnTab]="true" 
+                   [isOpen]="false"
+                   [(ngModel)]="selectedTags"
+                   placeholder="Escribe y pulsa Enter..."
+                   id="cmbTagsPalabras"
+                   class="custom-tailwind-select block w-full rounded-l-lg focus:ring-blue-500 focus:border-blue-500 outline-none"> 
+        </ng-select>
       </div>
 
-      <div *ngIf="opcionB" 
-           class="col-span-full"
-           animate.enter="fade-in-scale" 
-           animate.leave="fade-out">
-        <label for="txtBusqueda" class="block text-sm/6 font-medium">¿Qué deseas buscar?</label>
-        <textarea id="txtBusqueda" 
-                  rows="3"
-                  [(ngModel)]="textoBusqueda"
-                  class="block w-full rounded-l-lg px-3 py-1.5 text-base outline-1 outline-gray-300 placeholder:text-gray-500 sm:text-sm/6"></textarea>
-        <p class="mt-2 text-sm/6 text-gray-400">Escribe lo que deseas buscar.</p>
+      <div *ngIf="opcionB" class="mb-4" animate.enter="fade-in-scale" animate.leave="fade-out">
+        <label for="txtBusqueda" class="block text-sm font-medium mb-1">¿Qué deseas buscar?</label>
+        <textarea id="txtBusqueda" rows="3" [(ngModel)]="textoBusqueda" class="block w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"></textarea>
       </div>
 
       <div class="flex justify-center">
@@ -135,4 +113,5 @@
       </div>
     </div>
   </div>
+
 </div>

@@ -1,4 +1,4 @@
-import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { ApiService } from '../../../../services/api.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -12,9 +12,10 @@ import { AlertService } from '../../../../services/alert.service';
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   form: FormGroup;
   private isBrowser: boolean;
+  rememberMe: boolean = false;
 
   constructor(
     private _api: ApiService,
@@ -28,18 +29,43 @@ export class LoginComponent {
 
     this.form = this._fb.group({
       username: ['', Validators.required],
-      password: ['', Validators.required]
+      password: ['', Validators.required],
+      remember: [false]
     });
   }
 
-  onLogin() {
-    const data = this.form.value;
+  ngOnInit() {
+    if (this.isBrowser) {
+      const savedUser = localStorage.getItem('remembered_user');
+      const savedPassword = localStorage.getItem('remembered_password');
+      if (savedUser) {
+        this.form.patchValue({
+          username: savedUser,
+          password: savedPassword,
+          remember: true
+        });
+      }
+    }
+  }
 
-    this._api.post('auth/login', data).subscribe({
+  onLogin() {
+    const { username, password, remember } = this.form.value;
+
+    this._api.post('auth/login', { username, password }).subscribe({
       next: (res: any) => {
         if (res.access_token) {
           this._auth.setToken(res.access_token);
           sessionStorage.setItem('user_id', JSON.stringify(res));
+
+          if (this.isBrowser) {
+            if (remember) {
+              localStorage.setItem('remembered_user', username);
+              localStorage.setItem('remembered_password', password);
+            } else {
+              localStorage.removeItem('remembered_user');
+              localStorage.removeItem('remembered_password');
+            }
+          }
 
           this._alertService.success(
             'Iniciaste sesión', 

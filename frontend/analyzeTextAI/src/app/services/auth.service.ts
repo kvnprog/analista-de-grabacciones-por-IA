@@ -58,7 +58,7 @@ export class AuthService {
 
   clearStorage() {
     if (typeof window !== 'undefined') {
-      localStorage.clear();
+      localStorage.removeItem('token');
       window.location.href = '/login';
     }
   }

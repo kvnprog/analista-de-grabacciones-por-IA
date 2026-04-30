@@ -8,7 +8,8 @@ from fastapi.responses import JSONResponse
 
 from infrastructure.routes.route_chatGPT import router as chatGPT
 from infrastructure.routes.auth_routes import router as auth
-from infrastructure.routes.route_users import router as users
+from backend.infrastructure.routes.users.route_users import router as users
+from backend.infrastructure.routes.users.route_users_concentration import router as users_ctn
 
 
 load_dotenv()
@@ -32,3 +33,4 @@ app.add_middleware(
 app.include_router(auth)
 app.include_router(chatGPT)
 app.include_router(users)
+app.include_router(users_ctn)

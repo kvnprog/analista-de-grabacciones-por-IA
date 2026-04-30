@@ -1,10 +1,15 @@
 # routes/route_chatGPT.py
-from fastapi import APIRouter, UploadFile, File, Form
+from fastapi import APIRouter, Depends, UploadFile, File, Form
 from fastapi.responses import FileResponse
+from sqlalchemy.orm import Session
+from backend.infrastructure.routes.auth_routes import get_current_user
+from backend.infrastructure.services.services_logs import newLogRequests
 from infrastructure.services.services_chatGPT import audio_to_text,analyze_text_with_chatgpt,conteo_exacto_dinamico
 from infrastructure.services.services_excel import create_analysis_excel
 import json
 from typing import List
+from shared.db.db_connection import get_session_local
+from shared.models.internal_user import InternalUser
 
 router = APIRouter()
 
@@ -12,7 +17,9 @@ router = APIRouter()
 async def analyze_multiple_audios(
     files: List[UploadFile] = File(...),
     words: str | None = Form(None),
-    textSearch: str | None = Form(None)
+    textSearch: str | None = Form(None),
+    db: Session = Depends(get_session_local),
+    current_user: InternalUser = Depends(get_current_user)
 ):
     if not files or len(files) == 0:
         return {"error": "Debes enviar al menos un archivo"}
@@ -99,6 +106,8 @@ async def analyze_multiple_audios(
     # 🔹 Crear Excel
     excel_path = create_analysis_excel(conteo_palabras)
 
+    newLogRequests(db, current_user['user_id'], "/analyze-text", "POST")
+    
     return FileResponse(
         excel_path,
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",

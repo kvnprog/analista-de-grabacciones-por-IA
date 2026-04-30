@@ -1,51 +1,94 @@
 <aside [ngClass]="isCollapsed ? 'w-20' : 'w-64'" 
        class="bg-[#0c0259] text-white flex flex-col transition-all duration-300 ease-in-out shadow-xl h-screen overflow-hidden flex-shrink-0">
     
-    <div class="h-16 flex items-center px-4 border-b border-white/5">
-        <div class="flex items-center w-full" [ngClass]="isCollapsed ? 'justify-center' : 'justify-start'">
-            <div class="bg-white p-1 pt-3 pb-3 rounded-lg flex-shrink-0">
-                <img src="mca/logo-mc-corporativo-azul.png" 
-                     alt="logo-mc-corporativo" 
-                     [ngClass]="isCollapsed ? 'w-12' : 'w-12'" >
+    <div class="h-16 flex items-center border-b border-white/5 px-4">
+        <div class="flex items-center w-full transition-all duration-300" 
+             [ngClass]="isCollapsed ? 'justify-center' : 'justify-start'">
+            
+            <div class="bg-white p-1 pt-3 pb-3 rounded-lg flex-shrink-0 flex justify-center items-center shadow-sm">
+                <img src="mca/logo-mc-corporativo-azul.png" alt="logo" class="w-12 h-auto">
             </div>
-            <span *ngIf="!isCollapsed" class="ml-2 text-xl font-bold tracking-tight whitespace-nowrap animate-in fade-in">
-                Corporativo<span class="text-gray-400"> Muñoz</span>
+
+            <span class="ml-2 text-xl font-bold tracking-tight nav-text" 
+                  [class.text-hidden]="isCollapsed">
+                Corporativo<span class="text-gray-400 ml-1"> Muñoz</span>
             </span>
         </div>
     </div>
 
     <hr />
 
-    <nav class="flex-1 px-3 mt-6 space-y-2">
-        <a routerLink="/layout/home" 
+    <nav class="flex-1 px-3 mt-6 space-y-2 overflow-y-auto custom-scrollbar">
+        <a routerLink="/layout/home" routerLinkActive="bg-white/10"
            class="flex items-center h-12 rounded-xl hover:bg-white/5 transition-all group">
-            <div class="w-12 flex-shrink-0 flex justify-center items-center">
-                <svg class="h-6 w-6 text-indigo-300 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div class="flex-shrink-0 flex justify-center items-center transition-all duration-300"
+                 [ngClass]="isCollapsed ? 'w-full' : 'w-12'">
+                <svg class="h-6 w-6 text-indigo-300 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                 </svg>
             </div>
-            <span *ngIf="!isCollapsed" class="ml-1 font-medium whitespace-nowrap">Inicio</span>
+            <span class="ml-1 font-medium nav-text" [class.text-hidden]="isCollapsed">Inicio</span>
         </a>
 
-        <a routerLink="/layout/analyze" 
+        <a routerLink="/layout/analyze" routerLinkActive="bg-white/10"
            class="flex items-center h-12 rounded-xl hover:bg-white/5 transition-all group">
-            <div class="w-12 flex-shrink-0 flex justify-center items-center">
+            <div class="flex-shrink-0 flex justify-center items-center transition-all duration-300"
+                 [ngClass]="isCollapsed ? 'w-full' : 'w-12'">
                 <svg class="h-6 w-6 text-indigo-300 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
             </div>
-            <span *ngIf="!isCollapsed" class="ml-1 font-medium whitespace-nowrap">Analizador audios</span>
+            <span class="ml-1 font-medium nav-text" [class.text-hidden]="isCollapsed">Analizador audios</span>
         </a>
+
+        <div class="flex flex-col" *appHasRole="['admin_develop', 'coordinador']">
+            <button (click)="toggleSubmenu('users')"
+                    class="flex items-center h-12 rounded-xl hover:bg-white/5 transition-all group w-full overflow-hidden">
+                
+                <div class="flex-shrink-0 flex justify-center items-center transition-all duration-300"
+                     [ngClass]="isCollapsed ? 'w-full' : 'w-12'">
+                    <svg class="h-6 w-6 text-indigo-300 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                </div>
+                
+                <div class="flex flex-1 items-center justify-between nav-text transition-all duration-300" 
+                     [class.text-hidden]="isCollapsed">
+                    
+                    <span class="ml-1 font-medium text-indigo-100">Usuarios</span>
+                    
+                    <svg [ngClass]="openMenu === 'users' ? 'rotate-180' : ''"
+                        class="h-4 w-4 mr-4 text-indigo-400 transition-transform duration-300 flex-shrink-0" 
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </div>
+            </button>
+
+            <div [ngClass]="{'submenu-open': openMenu === 'users' && !isCollapsed}"
+                 class="submenu-content ml-11 space-y-1">
+                <a routerLink="/layout/users" *appHasRole="['admin_develop', 'coordinador']"
+                   class="flex items-center h-10 px-3 rounded-lg text-sm text-indigo-200 hover:bg-white/10 hover:text-white transition-colors">
+                    Gestión de Usuarios
+                </a>
+                <a routerLink="/layout/users-ctn" *appHasRole="['admin_develop']"
+                   class="flex items-center h-10 px-3 rounded-lg text-sm text-indigo-200 hover:bg-white/10 hover:text-white transition-colors">
+                    Concentrado de Usuarios
+                </a>
+            </div>
+        </div>
     </nav>
 
     <div class="p-4 border-t border-white/10">
-        <button class="flex items-center h-12 w-full rounded-xl hover:bg-red-500/20 text-indigo-100 transition-all overflow-hidden" (click)="onLogout()">
-            <div class="w-12 flex-shrink-0 flex justify-center items-center">
+        <button (click)="onLogout()" 
+                class="flex items-center h-12 w-full rounded-xl hover:bg-red-500/20 text-indigo-100 transition-all overflow-hidden">
+            <div class="flex-shrink-0 flex justify-center items-center text-red-400 transition-all duration-300"
+                 [ngClass]="isCollapsed ? 'w-full' : 'w-12'">
                 <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                 </svg>
             </div>
-            <span *ngIf="!isCollapsed" class="ml-1 font-medium whitespace-nowrap">Cerrar Sesión</span>
+            <span class="ml-1 font-medium nav-text" [class.text-hidden]="isCollapsed">Cerrar Sesión</span>
         </button>
     </div>
 </aside>

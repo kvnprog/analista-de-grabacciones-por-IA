@@ -53,9 +53,8 @@ export class LoginComponent implements OnInit {
 
     this._api.post('auth/login', { username, password }).subscribe({
       next: (res: any) => {
-        if (res.access_token) {
-          this._auth.setToken(res.access_token);
-          sessionStorage.setItem('user_id', JSON.stringify(res));
+        if (res.user_id) {
+          this._auth.setData(res);
 
           if (this.isBrowser) {
             if (remember) {

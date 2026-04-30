@@ -16,7 +16,8 @@ export class AuthService {
   };
 
   getUserDetails() {
-    const userData = sessionStorage.getItem('user_id');
+    const userData = localStorage.getItem('user_data');
+    console.log(userData)
     if (userData) {
       try {
         const parsedData = JSON.parse(userData);
@@ -38,27 +39,34 @@ export class AuthService {
     }
   }
 
-  setToken(token: string) {
+  setData(data: object) {
     if (typeof window !== 'undefined') {
-      localStorage.setItem('token', token);
+      localStorage.setItem('user_data', JSON.stringify(data));
     }
   }
 
-  getToken(): string | null {
+  getUserData() {
     if (typeof window !== 'undefined') {
-      return localStorage.getItem('token');
+      const data = localStorage.getItem('user_data');
+      return data ? JSON.parse(data) : null;
     }
     return null;
   }
 
+  getUserRole(): string | null {
+    const user = this.getUserData();
+    return user ? user.user_role : null;
+  }
+
   isLoggedIn(): boolean {
-    if (typeof window === 'undefined') return false; // SSR: no hay sesión
-    return !!this.getToken();
+    if (typeof window === 'undefined') return false;
+    // Si existe el objeto user_data, asumimos que está logueado
+    return !!this.getUserData();
   }
 
   clearStorage() {
     if (typeof window !== 'undefined') {
-      localStorage.removeItem('token');
+      localStorage.removeItem('user_data');
       window.location.href = '/login';
     }
   }
@@ -70,7 +78,7 @@ export class AuthService {
   }
 
   getFullName() {
-    const userData = sessionStorage.getItem('user_id');
+    const userData = localStorage.getItem('user_data');
     if (userData) {
       try {
         const parsedData = JSON.parse(userData);
@@ -84,7 +92,7 @@ export class AuthService {
   }
 
   getIdUser() {
-    const userData = sessionStorage.getItem('user_id');
+    const userData = localStorage.getItem('user_data');
     if (userData) {
       try {
         const parsedData = JSON.parse(userData);

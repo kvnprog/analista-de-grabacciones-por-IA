@@ -2,11 +2,12 @@ import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { APP_VERSION } from '../version';
 import { AlertContainerComponent } from './shared/alerts-container/alert-container.component';
+import { AlertPriContainerComponent } from './shared/alerts-pri-container/alert-pri-container.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, AlertContainerComponent],
+  imports: [RouterOutlet, AlertContainerComponent, AlertPriContainerComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

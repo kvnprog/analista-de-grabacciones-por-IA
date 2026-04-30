@@ -1,0 +1,54 @@
+name: Auto Versioning
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 1. Calculamos la nueva versión basada en tags
+      - name: 'Get Next Version'
+        id: tag_helper
+        uses: "anothrNick/github-tag-action@1.64.0"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: false # Para que devuelva "1.2.3" en lugar de "v1.2.3"
+          DEFAULT_BUMP: patch
+          DRY_RUN: true # Primero calculamos sin crear el tag todavía
+
+      # 2. Modificamos el archivo version.ts
+      - name: Update version.ts
+        run: |
+          NEW_VER="${{ steps.tag_helper.outputs.new_tag }}"
+          FILE_PATH="frontend/analyzeTextAI/src/version.ts"
+          
+          echo "Actualizando a version: $NEW_VER"
+          
+          # Buscamos la línea que contiene APP_VERSION y reemplazamos el contenido entre comillas
+          sed -i "s/export const APP_VERSION = '.*';/export const APP_VERSION = '$NEW_VER';/" $FILE_PATH
+
+      # 3. Commit y Push del archivo modificado
+      - name: Commit version change
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add frontend/analyzeTextAI/src/version.ts
+          git commit -m "chore: bump version to ${{ steps.tag_helper.outputs.new_tag }} [skip ci]"
+          git push
+
+      # 4. Ahora sí, creamos el tag oficial en GitHub
+      - name: Push New Tag
+        uses: "anothrNick/github-tag-action@1.64.0"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true

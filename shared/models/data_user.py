@@ -7,6 +7,7 @@ class DataUser(Base):
     __tablename__ = "data_users"
 
     id = Column(Integer, ForeignKey("internal_users.id"), primary_key=True, index=True)
+    id_employed = Column(Integer(), index=True)
     name = Column(String, index=True, nullable=False)
     last_name = Column(String, index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), default=get_mexico_time)

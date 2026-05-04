@@ -7,7 +7,7 @@ class ConcentrationUser(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     id_employed = Column(Integer, index=True, nullable=True)
-    username = Column(String, unique=True, index=True, nullable=False)
+    username = Column(String, unique=False, index=True, nullable=False)
     password = Column(String, nullable=False)
     name = Column(String, nullable=False)
     client = Column(String, nullable=False)

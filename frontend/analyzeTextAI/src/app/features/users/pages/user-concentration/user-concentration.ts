@@ -65,12 +65,10 @@ export class UserConcentration implements OnInit {
 
     this._api.get(url).subscribe({
       next: (res: any) => {
-        console.table(res)
         this.contactsDataSource = res
         this.totalUsuarios = res.length;
         this.applyFilters();
 
-        console.table(this.contactsDataSource)
         this.isLoading = false;
       },
       error: (err) => {
@@ -81,7 +79,6 @@ export class UserConcentration implements OnInit {
 
   saveUser(form: NgForm) {
     this.formSubmitted = true;
-    console.log('Guardando datos de:', this.usuarioSeleccionado);
 
     if (form.invalid) {
       console.log('Formulario inválido, revisa los campos en rojo');
@@ -90,13 +87,10 @@ export class UserConcentration implements OnInit {
 
     if (this.usuarioSeleccionado.id) {
       const { campaign, ...datosParaEnviar } = this.usuarioSeleccionado;
-      console.log(datosParaEnviar)
-      console.log("------------------------------------")
       datosParaEnviar.id_employed = datosParaEnviar.id_employed || null;
 
       this._api.put(`users-ctn/${this.usuarioSeleccionado.id}`, datosParaEnviar).subscribe({
         next: (res: any) => {
-          console.table(res);
           this._alertService.success(
             'Actualización correcta', 
             `Se actualizo la información del usuario: ${res.user.username}`
@@ -114,7 +108,6 @@ export class UserConcentration implements OnInit {
       });
     } else {
       this.usuarioSeleccionado.id_employed = this.usuarioSeleccionado.id_employed || null;
-      console.log(this.usuarioSeleccionado)
 
       this._api.post("users-ctn/", this.usuarioSeleccionado).subscribe({
         next: async (res: any) => {
@@ -126,11 +119,10 @@ export class UserConcentration implements OnInit {
           });
 
           if (confirmed) {
-            navigator.clipboard.writeText(res.temp_password);
+            this.closeOffcanvas();
+            this.getUsers();
+            this.copyToClipboard(res.temp_password);
           }
-
-          this.closeOffcanvas();
-          //this.getUsers();
         },
         error: (err) => {
           console.error('Error en el request', err);
@@ -153,18 +145,15 @@ export class UserConcentration implements OnInit {
       plataform: null,
       role: null
     };
-    console.log('Abriendo modal para nuevo usuario');
     this.isOffcanvasOpen = true;
   }
 
   openDetails(contact: any) {
     this.usuarioSeleccionado = { ...contact };
-    console.log('Editando usuario:', contact.username);
     this.isOffcanvasOpen = true;
   }
 
   async deleteUser(id: number, username: string) {
-    console.log('Eliminando usuario:', username);
     const confirmed = await this.alertService.confirm({
       title: '¿Confirmar eliminación?',
       message: `Esta acción eliminara al usuario: ${username}`,
@@ -193,7 +182,6 @@ export class UserConcentration implements OnInit {
 
   updateFilter(event: any, type: string) {
     const value = event.target.value.toLowerCase();
-    console.log(value)
   
     if (type === 'search') this.filters.search = value;
 
@@ -234,8 +222,6 @@ export class UserConcentration implements OnInit {
   prevPage() { if (this.page > 1) this.page--; }
 
   exportExcel() {
-    console.log(this.filteredUsers)
-    
     const datosLimpios = this.filteredUsers.map(user => {
       return {
         'Id': `#${user.id}`,
@@ -292,5 +278,31 @@ export class UserConcentration implements OnInit {
 
     // 3. Generar el archivo y descargarlo
     XLSX.writeFile(workbook, `Usuarios_${new Date().getTime()}.xlsx`);
+  }
+
+  async copyToClipboard(text: string) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(text);
+    } else {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      
+      textArea.focus();
+      textArea.select();
+      
+      try {
+        document.execCommand('copy');
+        console.log('Copiado con éxito (fallback)');
+      } catch (err) {
+        console.error('Error al copiar', err);
+      }
+      
+      document.body.removeChild(textArea);
+    }
   }
 }

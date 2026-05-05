@@ -65,12 +65,10 @@ export class UserList implements OnInit {
 
     this._api.get(url).subscribe({
       next: (res: any) => {
-        console.table(res)
         this.contactsDataSource = res
         this.totalUsuarios = res.length;
         this.applyFilters();
 
-        console.table(this.contactsDataSource)
         this.isLoading = false;
       },
       error: (err) => {
@@ -168,7 +166,7 @@ export class UserList implements OnInit {
           });
 
           if (confirmed) {
-            navigator.clipboard.writeText(res.temp_password);
+            this.copyToClipboard(res.temp_password);
           }
         },
         error: (err) => {
@@ -252,7 +250,7 @@ export class UserList implements OnInit {
           });
 
           if (confirmed) {
-            navigator.clipboard.writeText(res.temp_password);
+            this.copyToClipboard(res.temp_password);
           }
 
           this.closeOffcanvas();
@@ -295,8 +293,6 @@ export class UserList implements OnInit {
   }
 
   exportExcel() {
-    console.log(this.filteredUsers)
-    
     const datosLimpios = this.filteredUsers.map(user => {
       return {
         'ID': `#${user.id}`,
@@ -352,5 +348,31 @@ export class UserList implements OnInit {
 
     // 3. Generar el archivo y descargarlo
     XLSX.writeFile(workbook, `Usuarios_${new Date().getTime()}.xlsx`);
+  }
+
+  async copyToClipboard(text: string) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(text);
+    } else {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
+      document.body.appendChild(textArea);
+      
+      textArea.focus();
+      textArea.select();
+      
+      try {
+        document.execCommand('copy');
+        console.log('Copiado con éxito (fallback)');
+      } catch (err) {
+        console.error('Error al copiar', err);
+      }
+      
+      document.body.removeChild(textArea);
+    }
   }
 }

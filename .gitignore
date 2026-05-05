@@ -41,3 +41,5 @@ infra/local
 # Ignore all __pycache__ directories
 **/__pycache__/
 **/.pytest_cache/
+
+analysis_result.xlsx

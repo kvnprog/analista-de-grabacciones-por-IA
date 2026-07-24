@@ -1,6 +1,8 @@
 FROM python:3.11-slim
 
-RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
+RUN apt-get update
+RUN apt-get install -y ffmpeg
+RUN rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -20,5 +22,4 @@ ENV PYTHONPATH=/app/backend:/app/shared
 EXPOSE 9100
 
 # 4. El comando de ejecución
-# Como el PYTHONPATH incluye /app/backend, Python ya "ve" a infrastructure
 CMD ["uvicorn", "infrastructure.fastApiApp:app", "--host", "0.0.0.0", "--port", "9100", "--reload"]

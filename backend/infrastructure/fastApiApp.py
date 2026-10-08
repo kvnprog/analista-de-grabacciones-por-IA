@@ -19,6 +19,7 @@ IP_WEB = os.getenv("IP_WEB")
 origins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    "https://nexus.mcorp.com.mx/login",
 ]
 
 if IP_WEB:
